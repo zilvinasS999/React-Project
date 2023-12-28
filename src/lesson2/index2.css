@@ -1,0 +1,11 @@
+.progress {
+  height: 5em;
+  margin-bottom: 5em;
+  border: 1px solid black;
+  background-color: grey;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+}

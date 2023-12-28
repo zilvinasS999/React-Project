@@ -1,0 +1,23 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+}
+
+.colored-box {
+  width: 30em;
+  height: 20em;
+  border: 1px solid black;
+}
+
+.cookie-image {
+  height: 15em;
+  width: 15em;
+  background-image: url('https://w7.pngwing.com/pngs/622/427/png-transparent-cookie-clicker-clicker-heroes-peanut-butter-cookie-biscuits-chocolate-chip-cookie-others-miscellaneous-baked-goods-food.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}
+
+.new-img-class {
+  background-image: url('https://famouscookies.com/wp-content/uploads/2020/11/Famous-Cookie-Cocolate-Chip-21-1600x1600-1.png');
+}

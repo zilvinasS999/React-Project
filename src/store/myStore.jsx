@@ -1,166 +1,85 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-const useStore = create((set) => ({
-  inventory: {},
-
-  items: [
-    {
-      output: {
-        emoji: '🗡️',
-        name: 'Enchanted Sword',
-      },
-      ingredients: [
-        {
-          emoji: '🗡️',
-          name: 'Basic Sword',
-        },
-        {
-          emoji: '🔮',
-          name: 'Magic Crystal',
-        },
-      ],
-    },
-    {
-      output: {
-        emoji: '🛡️',
-        name: 'Reinforced Shield',
-      },
-      ingredients: [
-        {
-          emoji: '🛡️',
-          name: 'Basic Shield',
-        },
-        {
-          emoji: '🪓',
-          name: 'Iron Axe',
-        },
-      ],
-    },
-    {
-      output: {
-        emoji: '🔮',
-        name: 'Wand of Fire',
-      },
-      ingredients: [
-        {
-          emoji: '🔮',
-          name: 'Magic Wand',
-        },
-        {
-          emoji: '🍖',
-          name: 'Dragon Scale',
-        },
-      ],
-    },
-    {
-      output: {
-        emoji: '🏹',
-        name: 'Longbow',
-      },
-      ingredients: [
-        {
-          emoji: '🏹',
-          name: 'Shortbow',
-        },
-        {
-          emoji: '👢',
-          name: 'Leather Boots',
-        },
-      ],
-    },
-    {
-      output: {
-        emoji: '🪓',
-        name: 'Great Axe',
-      },
-      ingredients: [
-        {
-          emoji: '🪓',
-          name: 'Axe',
-        },
-        {
-          emoji: '👑',
-          name: 'Golden Crown',
-        },
-      ],
-    },
-    {
-      output: {
-        emoji: '👢',
-        name: 'Boots of Speed',
-      },
-      ingredients: [
-        {
-          emoji: '👢',
-          name: 'Boots',
-        },
-        {
-          emoji: '🍖',
-          name: 'Swift Feather',
-        },
-      ],
-    },
-    {
-      output: {
-        emoji: '👑',
-        name: 'Royal Crown',
-      },
-      ingredients: [
-        {
-          emoji: '👑',
-          name: 'Crown',
-        },
-        {
-          emoji: '🔮',
-          name: 'Elder Gem',
-        },
-      ],
-    },
-    {
-      output: {
-        emoji: '🍖',
-        name: 'Feast',
-      },
-      ingredients: [
-        {
-          emoji: '🍖',
-          name: 'Meat',
-        },
-        {
-          emoji: '🛡️',
-          name: 'Shield',
-        },
-      ],
-    },
-  ],
-
-  craftItem: (itemName) =>
-    set((state) => {
-      const recipe = state.items.find((item) => item.output.name === itemName);
-
-      if (recipe) {
-        const allIngredientsAvailable = recipe.ingredients.every(
-          (ingredient) => state.inventory[ingredient.name]
-        );
-
-        if (allIngredientsAvailable) {
-          recipe.ingredients.forEach((ingredient) => {
-            state.inventory[ingredient.name]--;
-          });
-
-          if (!state.inventory[itemName]) {
-            state.inventory[itemName] = 0;
+export const useStore = create(
+  persist(
+    (set, get) => ({
+      myUser: null,
+      users: [],
+      register: (newUser) => {
+        set((state) => {
+          const usernameExists = state.users.some(
+            (user) => user.username === newUser.username
+          );
+          if (usernameExists) {
+            alert('Username already exists');
+            return state;
           }
-          state.inventory[itemName]++;
+          return { users: [...state.users, newUser] };
+        });
+      },
 
-          return { ...state, inventory: { ...state.inventory } };
-        } else {
-          console.log('Not enough ingredients');
+      setMyUser: (user) => set({ myUser: user }),
+      logoutUser: () => set({ myUser: null }),
+      changeUsername: (newUsername) => {
+        const { users, myUser } = get();
+        if (users.some((user) => user.username === newUsername)) {
+          alert('This username is already taken. Please choose another one.');
+          return;
         }
-      } else {
-        console.log('Recipe does not exist');
-      }
+        if (myUser) {
+          const updatedUsers = users.map((user) =>
+            user.username === myUser.username
+              ? { ...user, username: newUsername }
+              : user
+          );
+          set({
+            users: updatedUsers,
+            myUser: { ...myUser, username: newUsername },
+          });
+        }
+      },
     }),
-}));
+    {
+      name: 'user-storage',
+    }
+  )
+);
 
-export default useStore;
+export const usePostStore = create(
+  persist(
+    (set, get) => ({
+      posts: [],
+      nextId: 1,
+      createNewPost: (image, title, username) => {
+        const newPost = {
+          id: get().nextId,
+          image,
+          title,
+          username,
+          timestamp: Date.now(),
+        };
+        set((state) => ({
+          posts: [newPost, ...state.posts],
+          nextId: state.nextId + 1,
+        }));
+      },
+      setPosts: (updatedPosts) => set({ posts: updatedPosts }),
+      deletePostWithoutId: () => {
+        const filteredPosts = get().posts.filter(
+          (post) => post.id !== undefined
+        );
+        set({ posts: filteredPosts });
+      },
+    }),
+    {
+      name: 'post-storage',
+    }
+  )
+);
+
+export const useAuthStore = create((set) => ({
+  isLoggedIn: false,
+  logIn: () => set({ isLoggedIn: true }),
+  logOut: () => set({ isLoggedIn: false, myUser: null }),
+}));

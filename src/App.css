@@ -1,48 +1,82 @@
-.navbar {
-  display: flex;
-  flex-direction: row;
-  gap: 1em;
+* {
+  text-decoration: none;
+  color: black;
 }
 
-.slots {
-  display: flex;
+.link:hover,
+.nav-link:hover {
+  color: darkgreen;
 }
 
-.slot {
-  height: 13em;
-  width: 10em;
-  border: 1px solid black;
-}
-
-.leaderboard {
-  width: 100vw;
-}
-
-.stats {
-  width: 100%;
+.navigation {
   display: flex;
   justify-content: space-between;
+  flex-direction: row;
 }
 
-body {
-  margin: 0;
-  padding: 0;
+.nav-left {
+  display: flex;
+  gap: 3em;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.sort-posts {
+  display: flex;
+}
+
+.sorting-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 2em 0;
 }
 
 img {
-  height: 15em;
-  width: 15em;
+  width: 500px;
+  height: 400px;
 }
 
-.roulette {
-  margin: 3em;
+.all-posts {
   display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-.triangle {
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent; /* Left side of the triangle */
-  border-right: 10px solid transparent; /* Right side of the triangle */
-  border-top: 10px solid red;
+.posts-container {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-gap: 4em;
+  padding: 0 2em;
+}
+
+.all-post img {
+  width: 100%;
+}
+
+.posts {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+}
+
+.forms {
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  height: 10em;
+  width: 20em;
+  gap: 1em;
 }
